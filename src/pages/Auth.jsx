@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Navigate } from "react-router";
 import { useAuth } from "../context/authContext";
-import Login from "../components/auth/login";
+import Login from "../components/auth/Login";
 import { Register } from "../components/auth/Register";
 import Logo from "../assets/quacker-logo.svg";
+
 import "./Auth.scss";
 
 export default function Auth() {
@@ -22,13 +23,15 @@ export default function Auth() {
     <main className="auth-page">
       <div className="auth-shell">
         <img className="auth-shell__logo" src={Logo} alt="Quacker" />
-        <p className="auth-shell__lead">Share quick updates and stay connected.</p>
+        <p className="auth-shell__lead">{activeForm === "login" ? "Welcome back" : "Join Quacker"}</p>
 
-        <div className="auth-switch" role="tablist" aria-label="Authentication forms">
+        <div className="auth-switch" role="tablist">
           <button
             className={`auth-switch__btn ${activeForm === "login" ? "is-active" : ""}`}
             type="button"
             onClick={() => setActiveForm("login")}
+            role="tab"
+            aria-selected={activeForm === "login"}
           >
             Log in
           </button>
@@ -36,6 +39,8 @@ export default function Auth() {
             className={`auth-switch__btn ${activeForm === "register" ? "is-active" : ""}`}
             type="button"
             onClick={() => setActiveForm("register")}
+            role="tab"
+            aria-selected={activeForm === "register"}
           >
             Sign up
           </button>

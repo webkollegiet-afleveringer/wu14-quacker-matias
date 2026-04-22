@@ -26,8 +26,6 @@ export const Register = () => {
 
   return (
     <form className="auth-card" onSubmit={handleRegister}>
-      <h2 className="auth-card__title">Create account</h2>
-      <p className="auth-card__subtitle">Join Quacker to start posting</p>
       <input
         className="auth-card__input"
         type="email"
