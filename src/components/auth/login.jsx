@@ -1,4 +1,4 @@
-import { login, doSignInWithGoogle } from "../../firebase/auth";
+import { login, doSignInWithGoogle, logout } from "../../firebase/auth";
 import { useAuth } from "../../context/authContext";
 import { useState } from "react";
 
@@ -31,8 +31,27 @@ const Login = () => {
         }
     };
 
+    const handleLogout = async () => {
+        setError("");
+
+        try {
+            await logout();
+            alert("Logged out successfully!");
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     if (userLoggedIn) {
-        return <p>You are already logged in.</p>;
+        return (
+            <div>
+                <p>You are logged in.</p>
+                <button type="button" onClick={handleLogout}>
+                    Log Out
+                </button>
+                {error && <p>{error}</p>}
+            </div>
+        );
     }
 
     return (

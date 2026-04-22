@@ -6,6 +6,7 @@ export default function Home() {
   return (
     <>
       <Header />
+      <Register />
       <Login />
       <h2>home</h2>
     </>
