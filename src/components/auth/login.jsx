@@ -44,19 +44,21 @@ const Login = () => {
 
     if (userLoggedIn) {
         return (
-            <div>
-                <p>You are logged in.</p>
-                <button type="button" onClick={handleLogout}>
-                    Log Out
+            <div className="auth-card auth-card--logged-in">
+                <p className="auth-card__title">You are logged in.</p>
+                <button className="auth-card__btn auth-card__btn--danger" type="button" onClick={handleLogout}>
+                    Log out
                 </button>
-                {error && <p>{error}</p>}
+                {error && <p className="auth-card__error">{error}</p>}
             </div>
         );
     }
 
     return (
-        <form onSubmit={handleLogin}>
+        <form className="auth-card" onSubmit={handleLogin}>
+            <p className="auth-card__subtitle">Sign in to continue to Quacker</p>
             <input
+                className="auth-card__input"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -64,17 +66,18 @@ const Login = () => {
                 required
             />
             <input
+                className="auth-card__input"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
             />
-            <button type="submit">Log In</button>
-            <button type="button" onClick={handleGoogleLogin}>
+            <button className="auth-card__btn" type="submit">Log in</button>
+            <button className="auth-card__btn auth-card__btn--secondary" type="button" onClick={handleGoogleLogin}>
                 Continue with Google
             </button>
-            {error && <p>{error}</p>}
+            {error && <p className="auth-card__error">{error}</p>}
         </form>
     );
 };

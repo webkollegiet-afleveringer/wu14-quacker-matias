@@ -21,12 +21,15 @@ export const Register = () => {
   };
 
   if (userLoggedIn) {
-    return <p>You are already logged in.</p>;
+    return null;
   }
 
   return (
-    <form onSubmit={handleRegister}>
+    <form className="auth-card" onSubmit={handleRegister}>
+      <h2 className="auth-card__title">Create account</h2>
+      <p className="auth-card__subtitle">Join Quacker to start posting</p>
       <input
+        className="auth-card__input"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -34,14 +37,15 @@ export const Register = () => {
         required
       />
       <input
+        className="auth-card__input"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
         required
       />
-      <button type="submit">Sign Up</button>
-      {error && <p>{error}</p>}
+      <button className="auth-card__btn" type="submit">Sign up</button>
+      {error && <p className="auth-card__error">{error}</p>}
     </form>
   );
 };
