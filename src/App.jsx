@@ -5,6 +5,7 @@ import Search from "./pages/Search";
 import Notifications from "./pages/Notifications";
 import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import { useAuth } from "./context/authContext";
 
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
 
       <Route
