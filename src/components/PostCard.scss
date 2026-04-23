@@ -15,11 +15,31 @@
     flex-direction: column;
     gap: 8px;
     &__username {
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      &__time {
+        font-size: 22px;
+        color: gray;
+        position: relative;
+        padding-left: 10px;
+        &::before {
+            position: absolute;
+            content: "";
+            width: 4px;
+            height: 4px;
+            background-color: gray;
+            border-radius: 50%;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+      }
     }
     &__text {
-      font-size: 16px;
+      font-size: 14px;
     }
   }
 }
