@@ -8,12 +8,13 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import { useAuth } from "./context/authContext";
+import Loading from "./components/Loading";
 
 function ProtectedLayout() {
   const { userLoggedIn, loading } = useAuth();
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   if (!userLoggedIn) {
@@ -46,7 +47,7 @@ export default function App() {
       <Route
         path="*"
         element={
-          loading ? <p>Loading...</p> : userLoggedIn ? <NotFound /> : <Navigate to="/auth" replace />
+          loading ? <Loading /> : userLoggedIn ? <NotFound /> : <Navigate to="/auth" replace />
         }
       />
     </Routes>
