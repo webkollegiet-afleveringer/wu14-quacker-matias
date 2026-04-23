@@ -4,6 +4,7 @@ import { db } from "../firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
+import "./Home.scss";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -22,16 +23,17 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="container">
-
-      <h2>home</h2>
-      {loading ? (
+      <main className="container home-page">
+        {loading ? (
           <Loading />
-          
         ) : (
-            posts.map((post) => <PostCard key={post.id} content={post.content} />)
+          <ul className="home">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </ul>
         )}
-        </main>
+      </main>
     </>
   );
 }

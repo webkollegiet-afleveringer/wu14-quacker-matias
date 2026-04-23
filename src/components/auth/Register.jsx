@@ -14,7 +14,6 @@ export const Register = () => {
 
     try {
       await register(email, password);
-      alert('User registered successfully!');
     } catch (err) {
       setError(err.message);
     }

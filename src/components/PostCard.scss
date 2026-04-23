@@ -1,0 +1,25 @@
+.post-card {
+  border-bottom: 1px solid #bdc5cd;
+  padding: 16px 41px;
+  display: flex;
+  gap: 16px;
+
+  &__pfp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: red;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    &__username {
+      font-size: 28px;
+      font-weight: 500;
+    }
+    &__text {
+      font-size: 16px;
+    }
+  }
+}
