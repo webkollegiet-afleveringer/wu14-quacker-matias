@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import PostCard from "../components/PostCard";
 import "./Home.scss";
+import AddPost from "./AddPost";
+import AddPostBtn from "../components/AddPostBtn";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -35,8 +37,8 @@ export default function Home() {
             ))}
           </ul>
         )}
-        <button type="button" onClick={() => navigate("/add-post")}>Add a Quack</button>
       </main>
+      <AddPostBtn onClick={() => navigate("/add-post")} />
     </>
   );
 }
