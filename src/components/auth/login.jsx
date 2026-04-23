@@ -15,7 +15,6 @@ const Login = () => {
 
     try {
       await login(email, password);
-      alert("Logged in successfully!");
     } catch (err) {
       setError(err.message);
     }
@@ -26,7 +25,6 @@ const Login = () => {
 
     try {
       await doSignInWithGoogle();
-      alert("Logged in with Google!");
     } catch (err) {
       setError(err.message);
     }
@@ -37,7 +35,6 @@ const Login = () => {
 
     try {
       await logout();
-      alert("Logged out successfully!");
     } catch (err) {
       setError(err.message);
     }
@@ -77,7 +74,14 @@ const Login = () => {
         placeholder="Password"
         required
       />
-      <button className="auth-card__btn" type="submit">Log in</button>
+      <button className="auth-card__btn" type="submit">
+        Log in
+      </button>
+      <span className="or_btn">
+        <hr />
+        or
+        <hr />
+      </span>
       <button
         className="auth-card__btn auth-card__btn--secondary"
         type="button"

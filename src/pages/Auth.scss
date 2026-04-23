@@ -168,3 +168,15 @@
     border-radius: 16px;
   }
 }
+.or_btn {
+    color: gray;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    margin: 15px 0; 
+    & hr {
+        border: 1px solid gray;
+        width: 100%;
+    }
+}
