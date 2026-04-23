@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { auth } from "../firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, reload } from "firebase/auth";
 
 export const AuthContext = createContext();
 
@@ -29,10 +29,20 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }
 
+  async function refreshCurrentUser() {
+    if (!auth.currentUser) {
+      return;
+    }
+
+    await reload(auth.currentUser);
+    setCurrentUser({ ...auth.currentUser });
+  }
+
   const value = {
     currentUser,
     userLoggedIn,
-    loading
+    loading,
+    refreshCurrentUser,
   };
 
   return (

@@ -31,6 +31,7 @@ export default function Profile() {
                 </button>
                 {error && <p className="profile-error">{error}</p>}
             </div>
+            <button type="button" onClick={() => navigate("/edit-profile")}>Edit Profile</button>
             <Navbar />
         </>
     );
