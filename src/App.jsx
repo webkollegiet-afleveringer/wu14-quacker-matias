@@ -7,6 +7,7 @@ import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
+import AddPost from "./pages/AddPost";
 import { useAuth } from "./context/authContext";
 import Loading from "./components/Loading";
 
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/add-post" element={<AddPost />} />
       </Route>
 
       <Route

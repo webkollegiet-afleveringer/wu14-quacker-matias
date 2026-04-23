@@ -3,10 +3,12 @@ import Loading from "../components/Loading";
 import { db } from "../firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import PostCard from "../components/PostCard";
 import "./Home.scss";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,6 +35,7 @@ export default function Home() {
             ))}
           </ul>
         )}
+        <button type="button" onClick={() => navigate("/add-post")}>Add a Quack</button>
       </main>
     </>
   );
