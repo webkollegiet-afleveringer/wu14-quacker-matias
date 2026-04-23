@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { updateProfile } from "firebase/auth";
+import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import Header from "../components/Header";
-import { auth } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
 import { useAuth } from "../context/authContext";
 
 export default function EditProfile() {
@@ -31,6 +32,17 @@ export default function EditProfile() {
 
 		try {
 			await updateProfile(auth.currentUser, { displayName: trimmedUsername });
+
+			const postsQuery = query(collection(db, "quacks"), where("uid", "==", auth.currentUser.uid));
+			const snapshot = await getDocs(postsQuery);
+			await Promise.all(
+				snapshot.docs.map((postDoc) =>
+					updateDoc(postDoc.ref, {
+						username: trimmedUsername,
+					})
+				)
+			);
+
 			await refreshCurrentUser();
 			navigate("/profile", { replace: true });
 		} catch (err) {
