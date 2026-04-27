@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { updateProfile } from "firebase/auth";
-import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import Header from "../components/Header";
 import { auth, db } from "../firebase/firebase";
 import { useAuth } from "../context/authContext";
@@ -9,7 +8,7 @@ import { useAuth } from "../context/authContext";
 export default function EditProfile() {
 	const navigate = useNavigate();
 	const { currentUser, refreshCurrentUser } = useAuth();
-	const [username, setUsername] = useState(currentUser?.displayName || "");
+	const [username, setUsername] = useState(currentUser?.username || currentUser?.displayName || "");
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState("");
 
@@ -31,7 +30,11 @@ export default function EditProfile() {
 		setError("");
 
 		try {
-			await updateProfile(auth.currentUser, { displayName: trimmedUsername });
+			await setDoc(doc(db, "users", auth.currentUser.uid), {
+				uid: auth.currentUser.uid,
+				email: currentUser?.email || auth.currentUser.email || "",
+				username: trimmedUsername,
+			}, { merge: true });
 
 			const postsQuery = query(collection(db, "quacks"), where("uid", "==", auth.currentUser.uid));
 			const snapshot = await getDocs(postsQuery);

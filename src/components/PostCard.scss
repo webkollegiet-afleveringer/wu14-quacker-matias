@@ -8,7 +8,12 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: red;
+    object-fit: cover;
+    flex-shrink: 0;
+
+    &--fallback {
+      background-color: #111;
+    }
   }
   &__content {
     display: flex;
@@ -20,6 +25,11 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      &__handle {
+        font-size: 16px;
+        font-weight: 400;
+        color: gray;
+      }
       &__time {
         font-size: 22px;
         color: gray;

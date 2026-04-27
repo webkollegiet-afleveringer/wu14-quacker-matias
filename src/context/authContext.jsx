@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { auth } from "../firebase/firebase";
 import { onAuthStateChanged, reload } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 export const AuthContext = createContext();
 
@@ -18,9 +20,28 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  async function buildCurrentUser(user) {
+    const userDocRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userDocRef);
+    const userData = userSnapshot.exists() ? userSnapshot.data() : {};
+
+    return {
+      ...user,
+      displayName: userData.displayName || user.displayName || "",
+      username: userData.username || "",
+      photoURL: userData.photoURL || user.photoURL || "",
+      email: userData.email || user.email || "",
+    };
+  }
+
   async function initializeUser(user) {
     if (user) {
-      setCurrentUser({ ...user });
+      try {
+        const hydratedUser = await buildCurrentUser(user);
+        setCurrentUser(hydratedUser);
+      } catch {
+        setCurrentUser({ ...user });
+      }
       setUserLoggedIn(true);
     } else {
       setCurrentUser(null);
@@ -35,7 +56,13 @@ export function AuthProvider({ children }) {
     }
 
     await reload(auth.currentUser);
-    setCurrentUser({ ...auth.currentUser });
+
+    try {
+      const hydratedUser = await buildCurrentUser(auth.currentUser);
+      setCurrentUser(hydratedUser);
+    } catch {
+      setCurrentUser({ ...auth.currentUser });
+    }
   }
 
   const value = {

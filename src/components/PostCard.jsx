@@ -35,11 +35,22 @@ function getHoursAgo(createdAt) {
 }
 
 export default function PostCard({ post }) {
+  const displayName = post.displayName || post.username || "Anonymous";
+  const username = post.username || "";
+
   return (
     <figure className="post-card">
-        <div className="post-card__pfp"></div>
+      {post.photoURL ? (
+        <img className="post-card__pfp" src={post.photoURL} alt="Profile" />
+      ) : (
+        <div className="post-card__pfp post-card__pfp--fallback" aria-hidden="true" />
+      )}
       <figcaption className="post-card__content">
-        <h3 className="post-card__content__username">{post.username} <span className="post-card__content__username__time">{getHoursAgo(post.createdAt)}</span></h3>
+        <h3 className="post-card__content__username">
+          {displayName}
+          {username ? <span className="post-card__content__username__handle">@{username}</span> : null}
+          <span className="post-card__content__username__time">{getHoursAgo(post.createdAt)}</span>
+        </h3>
         <p className="post-card__content__text">{post.content}</p>
       </figcaption>
     </figure>

@@ -6,7 +6,6 @@ import { Register } from "../components/auth/Register";
 import Logo from "../assets/quacker-logo.svg";
 
 import "./Auth.scss";
-import { log } from "firebase/firestore/pipelines";
 
 export default function Auth() {
   const { userLoggedIn, loading } = useAuth();
