@@ -40,32 +40,22 @@ export function AuthProvider({ children }) {
     try {
       const userRef = doc(db, "users", user.uid);
       const snapshot = await getDoc(userRef);
+      const userData = snapshot.exists() ? snapshot.data() : {};
       const usernameFallback = user.email?.split("@")[0] || user.displayName || "user";
 
-      if (!snapshot.exists()) {
-        await setDoc(
-          userRef,
-          {
-            uid: user.uid,
-            email: user.email || "",
-            username: usernameFallback,
-            displayName: user.displayName || usernameFallback,
-            avatarPath: user.photoURL || "",
-            createdAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
-      } else {
-        await setDoc(
-          userRef,
-          {
-            email: user.email || snapshot.data().email || "",
-            displayName: snapshot.data().displayName || user.displayName || "",
-            avatarPath: snapshot.data().avatarPath || snapshot.data().photoURL || user.photoURL || "",
-          },
-          { merge: true }
-        );
-      }
+      await setDoc(
+        userRef,
+        {
+          uid: user.uid,
+          email: user.email || userData.email || "",
+          username: userData.username || usernameFallback,
+          displayName: userData.displayName || user.displayName || usernameFallback,
+          photoURL: userData.photoURL || user.photoURL || "",
+          avatarPath: userData.avatarPath || userData.photoURL || user.photoURL || "",
+          ...(snapshot.exists() ? {} : { createdAt: serverTimestamp() }),
+        },
+        { merge: true }
+      );
     } catch {
       // ignore failures to avoid blocking UI
     }

@@ -31,28 +31,9 @@ export default function AddPost() {
         setError("");
 
         try {
-            const fallbackUsername = currentUser.email?.split("@")[0] || "anonymous";
-            let userData = {};
-
-            try {
-                const userSnapshot = await getDoc(doc(db, "users", currentUser.uid));
-                userData = userSnapshot.exists() ? userSnapshot.data() : {};
-            } catch {
-                userData = {};
-            }
-
-            const postDisplayName = userData.displayName || currentUser.displayName || userData.username || fallbackUsername;
-            const postUsername = userData.username || currentUser.username || fallbackUsername;
-            const postPhotoUrl = userData.photoURL || currentUser.photoURL || "";
-
             await addDoc(collection(db, "quacks"), {
                 content: trimmedContent,
                 uid: currentUser.uid,
-                displayName: postDisplayName,
-                username: postUsername,
-                userEmail: currentUser.email || "",
-                photoURL: postPhotoUrl,
-                avatarPath: postPhotoUrl,
                 createdAt: serverTimestamp(),
             });
 

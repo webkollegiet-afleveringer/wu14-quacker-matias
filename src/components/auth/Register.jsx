@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { register } from '../../firebase/auth';
+import { register, saveUserProfileDoc } from '../../firebase/auth';
 import { useAuth } from '../../context/authContext';
 
 export const Register = () => {
@@ -21,16 +21,33 @@ export const Register = () => {
     }
 
     try {
-      await register({
+      console.log("[RegisterComponent] handleRegister called");
+      const { userCredential, avatarData } = await register({
         email: email.trim(),
         password,
         username: username.trim(),
         displayName: displayName.trim(),
         avatarFile,
       });
+      console.log("[RegisterComponent] register() completed");
+
+      console.log("[RegisterComponent] Saving user profile doc...");
+      await saveUserProfileDoc(userCredential.user, {
+        uid: userCredential.user.uid,
+        email: email.trim(),
+        username: username.trim(),
+        displayName: displayName.trim(),
+        photoURL: avatarData.photoURL,
+        avatarPath: avatarData.avatarPath,
+      }, { merge: true });
+      console.log("[RegisterComponent] User profile doc saved");
+
+      console.log("[RegisterComponent] Refreshing current user...");
       await refreshCurrentUser();
+      console.log("[RegisterComponent] Signup complete");
     } catch (err) {
-      setError(err.message);
+      console.error("[RegisterComponent] Error:", err);
+      setError(err.message || err.toString());
     }
   };
 
