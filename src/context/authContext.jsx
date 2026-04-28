@@ -29,7 +29,6 @@ export function AuthProvider({ children }) {
       ...user,
       displayName: userData.displayName || user.displayName || "",
       username: userData.username || "",
-      avatarPath: userData.avatarPath || userData.photoURL || user.photoURL || "",
       photoURL: userData.photoURL || user.photoURL || "",
       email: userData.email || user.email || "",
     };
@@ -51,7 +50,6 @@ export function AuthProvider({ children }) {
           username: userData.username || usernameFallback,
           displayName: userData.displayName || user.displayName || usernameFallback,
           photoURL: userData.photoURL || user.photoURL || "",
-          avatarPath: userData.avatarPath || userData.photoURL || user.photoURL || "",
           ...(snapshot.exists() ? {} : { createdAt: serverTimestamp() }),
         },
         { merge: true }

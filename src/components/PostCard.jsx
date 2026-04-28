@@ -38,7 +38,7 @@ export default function PostCard({ post }) {
   const displayName = post.displayName || post.username || "Anonymous";
   const username = post.username || "";
 
-  const avatarSrc = post.avatarPath || post.photoURL || "";
+  const avatarSrc = post.photoURL || "";
 
   return (
     <figure className="post-card">

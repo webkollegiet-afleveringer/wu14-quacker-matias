@@ -24,7 +24,6 @@ async function writeUserDoc(user, data, options = {}) {
         username: data.username || getUsernameFallback(user),
         displayName: data.displayName || user.displayName || getUsernameFallback(user),
         photoURL: data.photoURL || user.photoURL || "",
-        avatarPath: data.avatarPath || "",
         createdAt: data.createdAt || serverTimestamp(),
     };
     console.log("[writeUserDoc] Doc data:", docData);
@@ -44,18 +43,23 @@ export async function saveUserProfileDoc(user, data, options = {}) {
 
 async function uploadAvatar(user, avatarFile) {
     if (!avatarFile) {
-        return { avatarPath: "", photoURL: "" };
+        return { photoURL: "" };
     }
 
     const filePath = `avatars/${user.uid}/${Date.now()}_${avatarFile.name}`;
     const avatarRef = storageRef(storage, filePath);
-    await uploadBytes(avatarRef, avatarFile);
-    const photoURL = await getDownloadURL(avatarRef);
-
-    return {
-        avatarPath: photoURL,
-        photoURL: photoURL,
-    };
+    console.log("[uploadAvatar] Uploading to:", filePath);
+    
+    try {
+        await uploadBytes(avatarRef, avatarFile);
+        console.log("[uploadAvatar] Upload complete, getting download URL");
+        const photoURL = await getDownloadURL(avatarRef);
+        console.log("[uploadAvatar] Download URL:", photoURL);
+        return { photoURL };
+    } catch (err) {
+        console.error("[uploadAvatar] Upload error:", err);
+        throw err;
+    }
 }
 
 export const register = async ({ email, password, username, displayName, avatarFile }) => {
@@ -74,17 +78,15 @@ export const register = async ({ email, password, username, displayName, avatarF
         });
         console.log("[Register] Initial user doc written");
 
-        let avatarData = { avatarPath: "", photoURL: "" };
+        let avatarData = { photoURL: "" };
 
         try {
             console.log("[Register] Uploading avatar...", avatarFile?.name);
             avatarData = await uploadAvatar(user, avatarFile);
-            console.log("[Register] Avatar uploaded successfully");
-            console.log("[Register] avatarPath:", avatarData.avatarPath);
-            console.log("[Register] photoURL:", avatarData.photoURL);
+            console.log("[Register] Avatar uploaded successfully:", avatarData.photoURL);
         } catch (avatarErr) {
             console.error("[Register] Avatar upload failed (non-fatal):", avatarErr);
-            avatarData = { avatarPath: "", photoURL: "" };
+            avatarData = { photoURL: "" };
         }
 
         console.log("[Register] Writing user doc with avatar...");
@@ -93,7 +95,6 @@ export const register = async ({ email, password, username, displayName, avatarF
             {
                 username,
                 displayName,
-                avatarPath: avatarData.avatarPath,
                 photoURL: avatarData.photoURL,
             },
             { merge: true }
@@ -133,7 +134,6 @@ export const doSignInWithGoogle = async () => {
             username: userSnapshot.data()?.username || usernameFallback,
             displayName: user.displayName || usernameFallback,
             photoURL: user.photoURL || "",
-            avatarPath: user.photoURL || "",
             ...(userSnapshot.exists() ? {} : { createdAt: serverTimestamp() }),
         },
         { merge: true }

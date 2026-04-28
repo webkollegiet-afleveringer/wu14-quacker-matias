@@ -6,7 +6,7 @@ import Feature from "../assets/icons/feature.svg";
 import "./Header.scss";
 export default function Header({ headerText }) {
   const { currentUser } = useAuth();
-  const headerAvatar = currentUser?.avatarPath || currentUser?.photoURL || userFallback;
+  const headerAvatar = currentUser?.photoURL || userFallback;
 
   return (
     <div className="header__back">

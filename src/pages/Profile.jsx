@@ -34,7 +34,7 @@ export default function Profile() {
 
     const displayName = profileData.displayName || currentUser?.displayName || "Anonymous";
     const username = profileData.username || currentUser?.username || currentUser?.email?.split("@")[0] || "";
-    const avatarPath = profileData.avatarPath || profileData.photoURL || currentUser?.photoURL || "";
+    const avatarPath = profileData.photoURL || currentUser?.photoURL || "";
 
     const handleSignOut = async () => {
         setError("");
