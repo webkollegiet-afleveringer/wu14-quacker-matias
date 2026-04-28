@@ -45,13 +45,20 @@ export default function PostCard({ post }) {
       {avatarSrc ? (
         <img className="post-card__pfp" src={avatarSrc} alt="Profile" />
       ) : (
-        <div className="post-card__pfp post-card__pfp--fallback" aria-hidden="true" />
+        <div
+          className="post-card__pfp post-card__pfp--fallback"
+          aria-hidden="true"
+        />
       )}
       <figcaption className="post-card__content">
         <h3 className="post-card__content__username">
           {displayName}
-          {username ? <span className="post-card__content__username__handle">@{username}</span> : null}
-          <span className="post-card__content__username__time">{getHoursAgo(post.createdAt)}</span>
+          <span className="post-card__content__username__handle">
+            @{username}
+          </span>
+          <span className="post-card__content__username__time">
+            {getHoursAgo(post.createdAt)}
+          </span>
         </h3>
         <p className="post-card__content__text">{post.content}</p>
       </figcaption>

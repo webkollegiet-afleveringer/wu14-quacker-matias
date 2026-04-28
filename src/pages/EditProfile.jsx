@@ -4,20 +4,21 @@ import { doc, setDoc } from "firebase/firestore";
 import Header from "../components/Header";
 import { auth, db } from "../firebase/firebase";
 import { useAuth } from "../context/authContext";
+import "./EditProfile.scss";
 
 export default function EditProfile() {
 	const navigate = useNavigate();
 	const { currentUser, refreshCurrentUser } = useAuth();
-	const [username, setUsername] = useState(currentUser?.username || currentUser?.displayName || "");
+	const [displayName, setDisplayName] = useState(currentUser?.displayName || "");
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState("");
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const trimmedUsername = username.trim();
+		const trimmedDisplayName = displayName.trim();
 
-		if (!trimmedUsername) {
-			setError("Username cannot be empty.");
+		if (!trimmedDisplayName) {
+			setError("Display name cannot be empty.");
 			return;
 		}
 
@@ -31,15 +32,13 @@ export default function EditProfile() {
 
 		try {
 			await setDoc(doc(db, "users", auth.currentUser.uid), {
-				uid: auth.currentUser.uid,
-				email: currentUser?.email || auth.currentUser.email || "",
-				username: trimmedUsername,
+				displayName: trimmedDisplayName,
 			}, { merge: true });
 
 			await refreshCurrentUser();
 			navigate("/profile", { replace: true });
 		} catch (err) {
-			setError(err.message || "Failed to update username.");
+			setError(err.message || "Failed to update display name.");
 			setSubmitting(false);
 		}
 	};
@@ -47,22 +46,29 @@ export default function EditProfile() {
 	return (
 		<>
 			<Header headerText="Edit Profile" />
-			<main className="container">
-				<form onSubmit={handleSubmit}>
-					<label htmlFor="username">Username</label>
-					<input
-						id="username"
-						name="username"
-						type="text"
-						value={username}
-						onChange={(event) => setUsername(event.target.value)}
-						placeholder="Enter your username"
-						disabled={submitting}
-					/>
-					{error ? <p>{error}</p> : null}
-					<button type="submit" disabled={submitting}>
-						{submitting ? "Saving..." : "Save"}
-					</button>
+			<main className="edit-profile-container">
+				<form className="edit-profile-form" onSubmit={handleSubmit}>
+					<div className="form-group">
+						<label htmlFor="displayName">Display Name</label>
+						<input
+							id="displayName"
+							name="displayName"
+							type="text"
+							value={displayName}
+							onChange={(event) => setDisplayName(event.target.value)}
+							placeholder="Enter your display name"
+							disabled={submitting}
+						/>
+					</div>
+					{error && <p className="error-message">{error}</p>}
+					<div className="form-actions">
+						<button type="submit" disabled={submitting} className="btn-save">
+							{submitting ? "Saving..." : "Save"}
+						</button>
+						<button type="button" onClick={() => navigate("/profile")} className="btn-cancel">
+							Cancel
+						</button>
+					</div>
 				</form>
 			</main>
 		</>

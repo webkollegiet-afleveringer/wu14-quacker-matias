@@ -50,10 +50,11 @@ async function uploadAvatar(user, avatarFile) {
     const filePath = `avatars/${user.uid}/${Date.now()}_${avatarFile.name}`;
     const avatarRef = storageRef(storage, filePath);
     await uploadBytes(avatarRef, avatarFile);
+    const photoURL = await getDownloadURL(avatarRef);
 
     return {
-        avatarPath: avatarRef.fullPath,
-        photoURL: await getDownloadURL(avatarRef),
+        avatarPath: photoURL,
+        photoURL: photoURL,
     };
 }
 
@@ -76,9 +77,11 @@ export const register = async ({ email, password, username, displayName, avatarF
         let avatarData = { avatarPath: "", photoURL: "" };
 
         try {
-            console.log("[Register] Uploading avatar...");
+            console.log("[Register] Uploading avatar...", avatarFile?.name);
             avatarData = await uploadAvatar(user, avatarFile);
-            console.log("[Register] Avatar uploaded:", avatarData);
+            console.log("[Register] Avatar uploaded successfully");
+            console.log("[Register] avatarPath:", avatarData.avatarPath);
+            console.log("[Register] photoURL:", avatarData.photoURL);
         } catch (avatarErr) {
             console.error("[Register] Avatar upload failed (non-fatal):", avatarErr);
             avatarData = { avatarPath: "", photoURL: "" };

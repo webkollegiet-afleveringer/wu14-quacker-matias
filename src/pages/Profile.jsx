@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import { db } from "../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import "./Profile.scss";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -56,12 +57,16 @@ export default function Profile() {
                 <p>Display name: {displayName}</p>
                 {username ? <p>Username: @{username}</p> : null}
                 {currentUser && <p>Email: {currentUser.email}</p>}
-                <button onClick={handleSignOut} className="profile-signout-btn">
-                    Sign Out
-                </button>
+                <div className="profile-actions">
+                    <button onClick={() => navigate("/edit-profile")} className="btn-primary">
+                        Edit Profile
+                    </button>
+                    <button onClick={handleSignOut} className="btn-secondary">
+                        Sign Out
+                    </button>
+                </div>
                 {error && <p className="profile-error">{error}</p>}
             </div>
-            <button type="button" onClick={() => navigate("/edit-profile")}>Edit Profile</button>
             <Navbar />
         </>
     );

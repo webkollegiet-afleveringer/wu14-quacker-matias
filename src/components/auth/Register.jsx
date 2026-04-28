@@ -29,17 +29,20 @@ export const Register = () => {
         displayName: displayName.trim(),
         avatarFile,
       });
-      console.log("[RegisterComponent] register() completed");
+      console.log("[RegisterComponent] register() completed, avatarData:", avatarData);
 
-      console.log("[RegisterComponent] Saving user profile doc...");
-      await saveUserProfileDoc(userCredential.user, {
+      const profileData = {
         uid: userCredential.user.uid,
         email: email.trim(),
         username: username.trim(),
         displayName: displayName.trim(),
         photoURL: avatarData.photoURL,
         avatarPath: avatarData.avatarPath,
-      }, { merge: true });
+      };
+      console.log("[RegisterComponent] About to save profile with avatarPath:", profileData.avatarPath);
+      console.log("[RegisterComponent] Full profile data:", profileData);
+
+      await saveUserProfileDoc(userCredential.user, profileData, { merge: true });
       console.log("[RegisterComponent] User profile doc saved");
 
       console.log("[RegisterComponent] Refreshing current user...");
