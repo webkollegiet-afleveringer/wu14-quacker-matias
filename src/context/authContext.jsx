@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { auth } from "../firebase/firebase";
 import { onAuthStateChanged, reload } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export const AuthContext = createContext();
@@ -29,14 +29,52 @@ export function AuthProvider({ children }) {
       ...user,
       displayName: userData.displayName || user.displayName || "",
       username: userData.username || "",
+      avatarPath: userData.avatarPath || userData.photoURL || user.photoURL || "",
       photoURL: userData.photoURL || user.photoURL || "",
       email: userData.email || user.email || "",
     };
   }
 
+  async function upsertUserDocIfMissing(user) {
+    if (!user?.uid) return;
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const snapshot = await getDoc(userRef);
+      const usernameFallback = user.email?.split("@")[0] || user.displayName || "user";
+
+      if (!snapshot.exists()) {
+        await setDoc(
+          userRef,
+          {
+            uid: user.uid,
+            email: user.email || "",
+            username: usernameFallback,
+            displayName: user.displayName || usernameFallback,
+            avatarPath: user.photoURL || "",
+            createdAt: serverTimestamp(),
+          },
+          { merge: true }
+        );
+      } else {
+        await setDoc(
+          userRef,
+          {
+            email: user.email || snapshot.data().email || "",
+            displayName: snapshot.data().displayName || user.displayName || "",
+            avatarPath: snapshot.data().avatarPath || snapshot.data().photoURL || user.photoURL || "",
+          },
+          { merge: true }
+        );
+      }
+    } catch {
+      // ignore failures to avoid blocking UI
+    }
+  }
+
   async function initializeUser(user) {
     if (user) {
       try {
+        await upsertUserDocIfMissing(user);
         const hydratedUser = await buildCurrentUser(user);
         setCurrentUser(hydratedUser);
       } catch {

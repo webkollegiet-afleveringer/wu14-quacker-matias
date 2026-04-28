@@ -38,10 +38,12 @@ export default function PostCard({ post }) {
   const displayName = post.displayName || post.username || "Anonymous";
   const username = post.username || "";
 
+  const avatarSrc = post.avatarPath || post.photoURL || "";
+
   return (
     <figure className="post-card">
-      {post.photoURL ? (
-        <img className="post-card__pfp" src={post.photoURL} alt="Profile" />
+      {avatarSrc ? (
+        <img className="post-card__pfp" src={avatarSrc} alt="Profile" />
       ) : (
         <div className="post-card__pfp post-card__pfp--fallback" aria-hidden="true" />
       )}

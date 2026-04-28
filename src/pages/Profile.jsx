@@ -33,7 +33,7 @@ export default function Profile() {
 
     const displayName = profileData.displayName || currentUser?.displayName || "Anonymous";
     const username = profileData.username || currentUser?.username || currentUser?.email?.split("@")[0] || "";
-    const photoURL = profileData.photoURL || currentUser?.photoURL || "";
+    const avatarPath = profileData.avatarPath || profileData.photoURL || currentUser?.photoURL || "";
 
     const handleSignOut = async () => {
         setError("");
@@ -50,8 +50,8 @@ export default function Profile() {
             <Header />
             <div className="profile-container">
                 <h1>Profile</h1>
-                {photoURL ? (
-                    <img src={photoURL} alt={`${displayName} profile`} width="72" height="72" />
+                {avatarPath ? (
+                    <img src={avatarPath} alt={`${displayName} profile`} width="72" height="72" />
                 ) : null}
                 <p>Display name: {displayName}</p>
                 {username ? <p>Username: @{username}</p> : null}

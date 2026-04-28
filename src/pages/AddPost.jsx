@@ -52,6 +52,7 @@ export default function AddPost() {
                 username: postUsername,
                 userEmail: currentUser.email || "",
                 photoURL: postPhotoUrl,
+                avatarPath: postPhotoUrl,
                 createdAt: serverTimestamp(),
             });
 

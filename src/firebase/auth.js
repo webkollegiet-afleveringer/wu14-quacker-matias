@@ -8,25 +8,24 @@ import {
     updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-
-async function fileToDataUrl(file) {
-    return await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error("Unable to read profile image."));
-        reader.readAsDataURL(file);
-    });
-}
-
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 export const register = async ({ email, password, username, displayName, avatarFile }) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const { user } = userCredential;
+    let avatarStoragePath = "";
+    let avatarDownloadUrl = "";
 
-    const avatarUrl = await fileToDataUrl(avatarFile);
+    if (avatarFile) {
+        const filePath = `avatars/${user.uid}/${Date.now()}_${avatarFile.name}`;
+        const sRef = storageRef(storage, filePath);
+        await uploadBytes(sRef, avatarFile);
+        avatarStoragePath = sRef.fullPath;
+        avatarDownloadUrl = await getDownloadURL(sRef);
+    }
 
     await updateProfile(user, {
         displayName,
-        photoURL: avatarUrl,
+        photoURL: avatarDownloadUrl || null,
     });
 
     await setDoc(doc(db, "users", user.uid), {
@@ -34,7 +33,8 @@ export const register = async ({ email, password, username, displayName, avatarF
         email,
         username,
         displayName,
-        photoURL: avatarUrl,
+        photoURL: avatarDownloadUrl || "",
+        avatarPath: avatarStoragePath,
         createdAt: serverTimestamp(),
     });
 
@@ -61,6 +61,7 @@ export const doSignInWithGoogle = async () => {
             username: userSnapshot.data()?.username || usernameFallback,
             displayName: user.displayName || usernameFallback,
             photoURL: user.photoURL || "",
+            avatarPath: user.photoURL || "",
             ...(userSnapshot.exists() ? {} : { createdAt: serverTimestamp() }),
         },
         { merge: true }

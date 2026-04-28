@@ -43,6 +43,7 @@ export default function Home() {
             displayName: post.displayName || profile.displayName || "",
             username: post.username || profile.username || "",
             photoURL: post.photoURL || profile.photoURL || "",
+            avatarPath: post.avatarPath || profile.avatarPath || profile.photoURL || post.photoURL || "",
           };
         });
 
