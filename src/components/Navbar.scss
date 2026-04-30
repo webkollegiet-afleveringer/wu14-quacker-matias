@@ -1,0 +1,22 @@
+@use "../styles/variables.scss" as *;
+.navbar {
+  background-color: white;
+  &__sec {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid #bdc5cd;
+  }
+  &__ul {
+    padding: 16px 41px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    a.active path {
+      fill: $primary-blue;
+      stroke: $primary-blue;
+    }
+  }
+}
