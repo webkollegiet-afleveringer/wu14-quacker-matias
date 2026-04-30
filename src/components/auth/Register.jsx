@@ -37,6 +37,7 @@ export const Register = () => {
         username: username.trim(),
         displayName: displayName.trim(),
         photoURL: avatarData.photoURL,
+        avatarPath: avatarData.avatarPath,
       };
       console.log("[RegisterComponent] About to save profile with photoURL:", profileData.photoURL);
       console.log("[RegisterComponent] Full profile data:", profileData);

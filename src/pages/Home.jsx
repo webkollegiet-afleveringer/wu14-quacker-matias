@@ -22,14 +22,20 @@ export default function Home() {
         const postsCollection = collection(db, "quacks");
         const snapshot = await getDocs(postsCollection);
         const rawPosts = snapshot.docs.map((entry) => ({ id: entry.id, ...entry.data() }));
+        console.log("[Home] Fetched posts:", rawPosts);
+        
         const uniqueUids = [...new Set(rawPosts.map((post) => post.uid).filter(Boolean))];
+        console.log("[Home] Unique UIDs:", uniqueUids);
 
         const profilePairs = await Promise.all(
           uniqueUids.map(async (uid) => {
             try {
               const profileSnapshot = await getDoc(doc(db, "users", uid));
-              return [uid, profileSnapshot.exists() ? profileSnapshot.data() : {}];
-            } catch {
+              const profileData = profileSnapshot.exists() ? profileSnapshot.data() : {};
+              console.log("[Home] Profile for uid", uid, ":", profileData);
+              return [uid, profileData];
+            } catch (err) {
+              console.error("[Home] Error fetching profile for uid", uid, ":", err);
               return [uid, {}];
             }
           })
@@ -38,6 +44,7 @@ export default function Home() {
         const profilesByUid = Object.fromEntries(profilePairs);
         const mergedPosts = rawPosts.map((post) => {
           const profile = profilesByUid[post.uid] || {};
+          console.log("[Home] Merging post uid", post.uid, "with profile:", profile);
           return {
             ...post,
             displayName: post.displayName || profile.displayName || "",
@@ -45,11 +52,13 @@ export default function Home() {
             photoURL: post.photoURL || profile.photoURL || "",
           };
         });
+        console.log("[Home] Final merged posts:", mergedPosts);
 
         if (isMounted) {
           setPosts(mergedPosts);
         }
-      } catch {
+      } catch (err) {
+        console.error("[Home] Error fetching posts:", err);
         if (isMounted) {
           setPosts([]);
         }

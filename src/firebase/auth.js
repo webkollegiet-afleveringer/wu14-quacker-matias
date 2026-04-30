@@ -26,6 +26,11 @@ async function writeUserDoc(user, data, options = {}) {
         photoURL: data.photoURL || user.photoURL || "",
         createdAt: data.createdAt || serverTimestamp(),
     };
+
+    if (data.avatarPath !== undefined) {
+        docData.avatarPath = data.avatarPath;
+    }
+
     console.log("[writeUserDoc] Doc data:", docData);
 
     try {
@@ -43,7 +48,7 @@ export async function saveUserProfileDoc(user, data, options = {}) {
 
 async function uploadAvatar(user, avatarFile) {
     if (!avatarFile) {
-        return { photoURL: "" };
+        return { photoURL: "", avatarPath: "" };
     }
 
     const filePath = `avatars/${user.uid}/${Date.now()}_${avatarFile.name}`;
@@ -55,7 +60,7 @@ async function uploadAvatar(user, avatarFile) {
         console.log("[uploadAvatar] Upload complete, getting download URL");
         const photoURL = await getDownloadURL(avatarRef);
         console.log("[uploadAvatar] Download URL:", photoURL);
-        return { photoURL };
+        return { photoURL, avatarPath: filePath };
     } catch (err) {
         console.error("[uploadAvatar] Upload error:", err);
         throw err;
@@ -78,7 +83,7 @@ export const register = async ({ email, password, username, displayName, avatarF
         });
         console.log("[Register] Initial user doc written");
 
-        let avatarData = { photoURL: "" };
+        let avatarData = { photoURL: "", avatarPath: "" };
 
         try {
             console.log("[Register] Uploading avatar...", avatarFile?.name);
@@ -86,7 +91,7 @@ export const register = async ({ email, password, username, displayName, avatarF
             console.log("[Register] Avatar uploaded successfully:", avatarData.photoURL);
         } catch (avatarErr) {
             console.error("[Register] Avatar upload failed (non-fatal):", avatarErr);
-            avatarData = { photoURL: "" };
+            avatarData = { photoURL: "", avatarPath: "" };
         }
 
         console.log("[Register] Writing user doc with avatar...");
@@ -96,6 +101,7 @@ export const register = async ({ email, password, username, displayName, avatarF
                 username,
                 displayName,
                 photoURL: avatarData.photoURL,
+                avatarPath: avatarData.avatarPath,
             },
             { merge: true }
         );

@@ -22,8 +22,11 @@ export default function Header({ headerText }) {
           <Link to={"/"}>
             <img src={Logo} alt="home" />
           </Link>
-        )}
-        <div className="header_">
+
+
+        )}  
+        <div
+         className="header_">
           <img src={Feature} alt="features" />
         </div>
       </header>
