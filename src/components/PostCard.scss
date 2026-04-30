@@ -1,0 +1,55 @@
+.post-card {
+  border-bottom: 1px solid #bdc5cd;
+  padding: 16px 41px;
+  display: flex;
+  gap: 16px;
+
+  &__pfp {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+
+    &--fallback {
+      background-color: #111;
+    }
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    &__username {
+      font-size: 22px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      &__handle {
+        font-size: 16px;
+        font-weight: 400;
+        color: gray;
+      }
+      &__time {
+        font-size: 22px;
+        color: gray;
+        position: relative;
+        padding-left: 10px;
+        &::before {
+            position: absolute;
+            content: "";
+            width: 4px;
+            height: 4px;
+            background-color: gray;
+            border-radius: 50%;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+      }
+    }
+    &__text {
+      font-size: 14px;
+    }
+  }
+}

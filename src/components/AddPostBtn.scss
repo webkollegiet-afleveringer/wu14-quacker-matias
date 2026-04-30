@@ -1,0 +1,25 @@
+@use "../styles/variables.scss" as *;
+.add-post {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    height: 55px;
+    width: 55px;
+    border-radius: 50%;
+    background-color: $primary-blue;
+    margin-right: 20px;
+    &__wrapper {
+        max-width: 1200px;
+        width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        position: fixed;
+        bottom: 77px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+    }
+    &:hover {
+        cursor: pointer;
+        background-color: $primary-blue-hover;
+    }
+}
